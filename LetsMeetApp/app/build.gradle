@@ -6,8 +6,8 @@ android {
 
     defaultConfig {
         applicationId "com.mobile.cls.letsmeetapp"
-        minSdkVersion 15
-        targetSdkVersion 23
+        minSdkVersion 18
+        targetSdkVersion 21
         versionCode 1
         versionName "1.0"
     }
