@@ -1,0 +1,56 @@
+{
+  "project_info": {
+    "project_id": "lets-meet-app-3808d",
+    "project_number": "1074919523257",
+    "name": "Lets Meet  App"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1074919523257:android:94dc8563d12dd8d1",
+        "client_id": "android:com.mobile.cls.letsmeetapp",
+        "client_type": 1,
+        "android_client_info": {
+          "package_name": "com.mobile.cls.letsmeetapp",
+          "certificate_hash": []
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1074919523257-6a50r3b04i5j7dujm7ii58cldo26bkp7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mobile.cls.letsmeetapp",
+            "certificate_hash": "BD06A78448747367C0A721C6AED5E9D149A2787B"
+          }
+        },
+        {
+          "client_id": "1074919523257-350ng0sg7q1jbo7i8gmlhsl0r592vm6g.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "cloud_messaging_service": {
+          "status": 1,
+          "apns_config": []
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "google_signin_service": {
+          "status": 2
+        },
+        "ads_service": {
+          "status": 1
+        }
+      }
+    }
+  ],
+  "client_info": [],
+  "ARTIFACT_VERSION": "1"
+}

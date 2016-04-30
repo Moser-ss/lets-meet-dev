@@ -34,8 +34,10 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name=".LoginActivity"
-            android:label="@string/title_activity_login"></activity>
+            android:name="com.mobile.cls.letsmeetapp.SignInActivity"
+            android:label="@string/name_sign_in_activity"
+            android:theme="@style/AppTheme">
+        </activity>
 
         <activity
             android:name=".MainActivity"
