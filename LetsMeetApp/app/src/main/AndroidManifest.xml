@@ -34,7 +34,7 @@
             android:value="@string/google_maps_key" />
 
         <activity
-            android:name="com.mobile.cls.letsmeetapp.SignInActivity"
+            android:name=".SignInActivity"
             android:label="@string/name_sign_in_activity"
             android:theme="@style/AppTheme">
             <intent-filter>
@@ -43,17 +43,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".MainActivity"
-            android:label="@string/title_activity_main">
-        </activity>
+            android:label="@string/title_activity_main"></activity>
         <activity android:name=".MenuActivity" />
         <activity android:name=".NearMeActivity" />
         <activity android:name=".FindPlaceActivity" />
         <activity android:name=".MyEventsActivity" />
         <activity android:name=".FavoriteActivity" />
-        <activity android:name=".OptionsActivity"></activity>
+        <activity android:name=".OptionsActivity" />
     </application>
 
 </manifest>
