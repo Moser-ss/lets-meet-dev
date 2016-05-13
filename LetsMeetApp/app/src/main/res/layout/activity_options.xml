@@ -60,8 +60,7 @@
             android:layout_height="wrap_content"
             android:textSize="20sp"
             android:textAlignment="center"
-            android:text="Version 0.1"
-            android:id="@+id/versrionView"
+            android:id="@+id/versionView"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 

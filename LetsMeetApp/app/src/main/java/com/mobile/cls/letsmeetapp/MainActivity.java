@@ -1,27 +1,30 @@
 package com.mobile.cls.letsmeetapp;
 
 import android.content.Intent;
-import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
+import android.service.carrier.CarrierMessagingService;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.design.widget.FloatingActionButton;
 import android.support.v4.app.FragmentActivity;
 import android.util.Log;
 import android.view.View;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.common.api.PendingResult;
+import com.google.android.gms.common.api.ResultCallback;
+import com.google.android.gms.common.api.ResultCallbacks;
 import com.google.android.gms.common.api.Status;
-import com.google.android.gms.location.FusedLocationProviderApi;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationServices;
+import com.google.android.gms.location.places.GeoDataApi;
 import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.PlaceBuffer;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.location.places.ui.PlaceAutocompleteFragment;
 import com.google.android.gms.location.places.ui.PlaceSelectionListener;
-import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -30,16 +33,26 @@ import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import java.text.DecimalFormat;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener , LocationListener{
 
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
-    private Location lastLocation;
     private LocationRequest locationRequest;
     private boolean locationUpdatesRequested = false;
     private int primary = R.color.colorPrimary;
     private int primary_light = R.color.primary_light;
     private STATUS status = STATUS.FIND_CURRENT_LOCATION;
+    private LatLng lastLatLng;
+    private String[] placesTypes = {"bar","cafe", "restaurant"};
+    private double RADIUS = 1000;
+    private ArrayList<AppPlace> placesToMark;
+    public static final int PLACE_REQUEST = 100;
+    private Location lastKnowLocation;
 
 
     public void goToMenu (View view){
@@ -50,7 +63,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     public void goNearMe(View view){
         Intent goToNearMe = new Intent( getApplicationContext(), NearMeActivity.class);
-        startActivity(goToNearMe);
+        goToNearMe.putExtra("Latitude",Double.toString(lastLatLng.latitude));
+        goToNearMe.putExtra("Longitude",Double.toString(lastLatLng.longitude));
+        goToNearMe.putParcelableArrayListExtra("Places", placesToMark);
+        startActivityForResult(goToNearMe, PLACE_REQUEST);
     }
 
     public void goFavoritePlaces(View view){
@@ -75,10 +91,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                     .addConnectionCallbacks(this)
                     .addOnConnectionFailedListener(this)
                     .addApi(LocationServices.API)
+                    .addApi(Places.GEO_DATA_API)
                     .build();
         }
 
         createAutoComplete();
+
+        lastLatLng = new LatLng(0,0);
+        placesToMark = new ArrayList<>();
     }
 
     public void goToCurrentLocation(View view){
@@ -111,6 +131,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void markPlace(Place place) {
+        mMap.clear();
+
+        createUserMark(lastKnowLocation);
+
         MarkerOptions marker = new MarkerOptions().title(place.getName().toString())
                                     .position(place.getLatLng());
         mMap.addMarker(marker);
@@ -122,7 +146,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
-        lastLocation = LocationServices.FusedLocationApi.getLastLocation(
+        Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 googleApiClient);
         if (lastLocation != null) {
             updateGUI(lastLocation);}
@@ -133,17 +157,59 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private void updateGUI(Location lastLocation) {
         if (status == STATUS.FIND_CURRENT_LOCATION) {
             mMap.clear();
-            CircleOptions circle = new CircleOptions().fillColor(primary)
-                                    .strokeColor(primary_light)
-                                    .radius(5)
-                                    .strokeWidth(lastLocation.getAccuracy());
-            LatLng location = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
-            circle.center(location);
-
-            mMap.addCircle(circle);
+            LatLng location = createUserMark(lastLocation);
+            createPlacesMarks(lastLocation);
 
             mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(location,15));
+
         }
+    }
+
+    @NonNull
+    private LatLng createUserMark(Location lastLocation) {
+        CircleOptions circle = new CircleOptions().fillColor(primary)
+                                .strokeColor(primary_light)
+                                .radius(5)
+                                .strokeWidth(lastLocation.getAccuracy());
+        LatLng location = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
+        circle.center(location);
+
+        mMap.addCircle(circle);
+        return location;
+    }
+
+    protected void createPlacesMarks(Location lastLocation) {
+        LatLng currentLatLng = truncateLatLng(lastLocation);
+
+        if (lastLatLng.equals(currentLatLng)){
+            Log.i("INFO", "Location with minor change");
+        }else {
+
+            QueryData query = new QueryData(this,lastLocation,RADIUS, placesTypes);
+            new QueryPlaces().execute(query);
+            lastLatLng= currentLatLng;
+            sortPlacesByDistance();;
+            Log.i("INFO", "Location change");
+        }
+
+        for (AppPlace place :placesToMark){
+            MarkerOptions marker = new MarkerOptions().position(place.getCoordinates())
+                    .title(place.getName());
+            mMap.addMarker(marker);
+        }
+
+    }
+
+    @NonNull
+    private LatLng truncateLatLng(Location lastLocation) {
+        DecimalFormat format =new DecimalFormat("#.###");
+        String latString = format.format(lastLocation.getLatitude());
+        double latDouble =Double.parseDouble(latString);
+
+        String longString = format.format(lastLocation.getLongitude());
+        double longDouble = Double.parseDouble(longString);
+
+        return new LatLng(latDouble, longDouble);
     }
 
     protected void createLocationRequest() {
@@ -172,9 +238,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     protected void onPause() {
         super.onPause();
-        stopLocationUpdates();
-        locationUpdatesRequested=false;
-
+        if (googleApiClient.isConnected()) {
+            stopLocationUpdates();
+            locationUpdatesRequested = false;
+        }
     }
 
     private void stopLocationUpdates() {
@@ -217,8 +284,74 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void onLocationChanged(Location location) {
-        Log.i("INFO", "Location Changed");
+
+        Log.i("INFO", "Location Changed: New Location Lat "+location.getLatitude()+" Long "+location.getLongitude());
+        lastKnowLocation = location;
         updateGUI(location);
 
+
     }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+
+        if(resultCode == RESULT_OK && requestCode == PLACE_REQUEST){
+            status = STATUS.FIND_PLACE;
+            Bundle res = data.getExtras();
+            AppPlace appPlace = res.getParcelable("Place");
+            Log.d("DEBUG","Place obtain is "+appPlace.getName());
+
+            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(googleApiClient,appPlace.getPlaceId());
+            placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+                @Override
+                public void onResult(@NonNull PlaceBuffer places) {
+                    if (!places.getStatus().isSuccess()) {
+                        Log.e("ERROR","Place not found");
+                        // Request did not complete successfully
+                        places.release();
+                        return;
+                    }
+                    Place place;
+                    try {
+                        place = places.get(0);
+                        Log.i("INFO","Place get successfully - Place "+place.getName());
+
+                    } catch (IllegalStateException e) {
+                        places.release();
+                        return;
+                    }
+
+
+                    markPlace(place);
+
+                    places.release();
+                }
+            });
+        }
+    }
+
+
+    public void setPlaces(ArrayList<AppPlace> places) {
+        this.placesToMark = places;
+        sortPlacesByDistance();
+
+    }
+
+    private void sortPlacesByDistance(){
+        Log.i("INFO", "Sorting places by distance from :"+lastLatLng.latitude+" Lat , "+lastLatLng.longitude+" Long");
+        for (AppPlace place :placesToMark) {
+            float [] results = new float[1];
+            Location.distanceBetween(lastLatLng.latitude,lastLatLng.longitude,place.getCoordinates().latitude,place.getCoordinates().longitude,results);
+            place.setDistance(results[0]);
+            Log.d("DEBUG","Place "+place.getName()+" is a "+place.getDistance()+" m");
+        }
+        Collections.sort(placesToMark, new Comparator<AppPlace>() {
+            @Override
+            public int compare(AppPlace appPlace, AppPlace t1) {
+                return (int)(appPlace.getDistance()- t1.getDistance());
+            }
+        });
+    }
+
+
 }
