@@ -2,16 +2,18 @@ package com.mobile.cls.letsmeetapp;
 
 import android.location.Location;
 
+import com.google.android.gms.maps.model.LatLng;
+
 import java.util.ArrayList;
 
 /**
  * Created by User on 08/05/2016.
  */
 public class QueryData {
-    private  MainActivity main;
+    private  AppActivity appActivity;
     private  String[] types;
     private  double radius;
-    private Location location;
+    private LatLng location;
 
 
 
@@ -23,18 +25,19 @@ public class QueryData {
         return radius;
     }
 
-    public Location getLocation() {
+    public LatLng getLocation() {
         return location;
     }
 
-    public QueryData(MainActivity main ,Location location, double radius, String [] types) {
-        this.main = main;
+    public QueryData(AppActivity appActivity , LatLng location, double radius, String [] types) {
+        this.appActivity = appActivity;
         this.location = location;
         this.radius = radius;
         this.types = types;
     }
 
-    public MainActivity getMainActivity() {
-        return main;
+
+    public AppActivity getAppActivity() {
+        return appActivity;
     }
 }

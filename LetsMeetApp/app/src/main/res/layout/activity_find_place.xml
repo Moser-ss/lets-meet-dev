@@ -16,7 +16,7 @@
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
         android:layout_alignParentStart="false"
-        android:text="A place to do a meet"
+        android:text="The location to do a meet"
         android:gravity="center_horizontal" />
 
     <TextView
@@ -43,6 +43,7 @@
             android:layout_height="wrap_content"
             android:text="Restaurant"
             android:id="@+id/restaurantButton"
+            android:onClick="uncheckedRestaurantButton"
             android:layout_gravity="center_horizontal" />
 
         <RadioButton
@@ -51,14 +52,16 @@
             android:layout_height="wrap_content"
             android:text="Bar"
             android:id="@+id/barButton"
+            android:onClick="uncheckedBarButton"
             android:layout_gravity="center_horizontal" />
 
         <RadioButton
             android:layout_margin="10dp"
             android:layout_width="100dp"
             android:layout_height="wrap_content"
-            android:text="Coffeshop"
-            android:id="@+id/coffeshopButton"
+            android:text="Cafe"
+            android:id="@+id/cafeButton"
+            android:onClick="uncheckedCafeButton"
             android:layout_gravity="center_horizontal" />
 
         <Button
@@ -68,6 +71,7 @@
             android:layout_height="wrap_content"
             android:text="Search"
             android:id="@+id/searchButton"
+            android:onClick="queryPlace"
             android:layout_gravity="center_horizontal" />
     </LinearLayout>
 </RelativeLayout>

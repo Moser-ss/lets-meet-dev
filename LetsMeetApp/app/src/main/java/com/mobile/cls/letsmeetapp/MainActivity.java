@@ -38,7 +38,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 
-public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener , LocationListener{
+public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener , LocationListener, AppActivity{
 
     private GoogleMap mMap;
     private GoogleApiClient googleApiClient;
@@ -51,21 +51,32 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private String[] placesTypes = {"bar","cafe", "restaurant"};
     private double RADIUS = 1000;
     private ArrayList<AppPlace> placesToMark;
-    public static final int PLACE_REQUEST = 100;
+    public  int PLACE_REQUEST;
     private Location lastKnowLocation;
 
 
     public void goToMenu (View view){
         Intent goToMenu = new Intent(getApplicationContext(), MenuActivity.class);
-        startActivity(goToMenu);
+        Location location = LocationServices.FusedLocationApi.getLastLocation(
+                googleApiClient);
+        Bundle data = new Bundle();
+        LatLng locationLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+        data.putParcelable("Location",locationLatLng);
+        data.putParcelableArrayList("Places",placesToMark);
+        goToMenu.putExtras(data);
+        startActivityForResult(goToMenu,PLACE_REQUEST);
     }
 
 
     public void goNearMe(View view){
         Intent goToNearMe = new Intent( getApplicationContext(), NearMeActivity.class);
-        goToNearMe.putExtra("Latitude",Double.toString(lastLatLng.latitude));
-        goToNearMe.putExtra("Longitude",Double.toString(lastLatLng.longitude));
-        goToNearMe.putParcelableArrayListExtra("Places", placesToMark);
+        Bundle data = new Bundle();
+        Location location = LocationServices.FusedLocationApi.getLastLocation(
+                googleApiClient);
+        LatLng locationLatLng = new LatLng(location.getLatitude(),location.getLongitude());
+        data.putParcelable("Location",locationLatLng);
+        data.putParcelableArrayList("Places", placesToMark);
+        goToNearMe.putExtras(data);
         startActivityForResult(goToNearMe, PLACE_REQUEST);
     }
 
@@ -74,13 +85,14 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         startActivity(goToFavoritePlaces);
     }
     public void goMyEvents(View view){
-        Intent goToMyEnvents = new Intent( getApplicationContext(), MyEventsActivity.class);
-        startActivity(goToMyEnvents);
+        Intent goToMyEvents = new Intent( getApplicationContext(), MyEventsActivity.class);
+        startActivity(goToMyEvents);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        PLACE_REQUEST=this.getResources().getInteger(R.integer.PLACE_REQUEST);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -184,11 +196,11 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         if (lastLatLng.equals(currentLatLng)){
             Log.i("INFO", "Location with minor change");
         }else {
-
-            QueryData query = new QueryData(this,lastLocation,RADIUS, placesTypes);
+            LatLng location = new LatLng(lastLocation.getLatitude(),lastLocation.getLongitude());
+            QueryData query = new QueryData(this,location,RADIUS, placesTypes);
             new QueryPlaces().execute(query);
             lastLatLng= currentLatLng;
-            sortPlacesByDistance();;
+
             Log.i("INFO", "Location change");
         }
 
@@ -331,12 +343,6 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
-    public void setPlaces(ArrayList<AppPlace> places) {
-        this.placesToMark = places;
-        sortPlacesByDistance();
-
-    }
-
     private void sortPlacesByDistance(){
         Log.i("INFO", "Sorting places by distance from :"+lastLatLng.latitude+" Lat , "+lastLatLng.longitude+" Long");
         for (AppPlace place :placesToMark) {
@@ -354,4 +360,12 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
 
+    @Override
+    public void update(Bundle data) {
+        this.placesToMark =data.getParcelableArrayList("Places");
+        Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
+        sortPlacesByDistance();
+
+        createPlacesMarks(location);
+    }
 }

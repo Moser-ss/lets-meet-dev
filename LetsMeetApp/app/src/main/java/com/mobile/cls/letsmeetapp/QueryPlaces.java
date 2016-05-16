@@ -2,9 +2,11 @@ package com.mobile.cls.letsmeetapp;
 
 import android.location.Location;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.util.Log;
 
 import com.google.android.gms.location.places.Places;
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,13 +21,14 @@ import java.util.ArrayList;
 /**
  * Created by User on 05/05/2016.
  */
-public class QueryPlaces extends AsyncTask<QueryData ,Integer, ArrayList<AppPlace>> {
+public class QueryPlaces extends AsyncTask<QueryData,Integer, ArrayList<AppPlace>> {
 
 
-    private MainActivity mainActivity;
+    private static final String SERVER_PLACES_KEY ="AIzaSyAQardAatFiJGIWRWRU7RF-YIv-sBvYBSI" ;
+    private AppActivity appActivity;
     private QueryData queryData;
 
-    private ArrayList<AppPlace> getPlaces(Location location, double radius, String[] types){
+    private ArrayList<AppPlace> getPlaces(LatLng location, double radius, String[] types){
         ArrayList<AppPlace> places = new ArrayList<>();
 
         for(String type : types){
@@ -37,10 +40,10 @@ public class QueryPlaces extends AsyncTask<QueryData ,Integer, ArrayList<AppPlac
         return places;
     }
 
-    private  ArrayList<AppPlace> getPlaces(Location location, double radius , String type)  {
+    private  ArrayList<AppPlace> getPlaces(LatLng location, double radius , String type)  {
         ArrayList<AppPlace> places = null;
 
-        String urlString = makeUrl(location.getLatitude(),location.getLongitude(),radius,type);
+        String urlString = makeUrl(location.latitude,location.longitude,radius,type);
         Log.i("INFO", "URL created : "+urlString);
         String jsonContents = getUrlContents(urlString);
 
@@ -71,7 +74,7 @@ public class QueryPlaces extends AsyncTask<QueryData ,Integer, ArrayList<AppPlac
             urlString.append(Double.toString(longitude));
             urlString.append("&radius="+Double.toString(radius));
             urlString.append("&type=" + type);
-            urlString.append("&key=" +mainActivity.getResources().getString(R.string.server_places_key));
+            urlString.append("&key=" +SERVER_PLACES_KEY);
 
         return urlString.toString();
     }
@@ -117,20 +120,22 @@ public class QueryPlaces extends AsyncTask<QueryData ,Integer, ArrayList<AppPlac
 
 
     @Override
-    protected ArrayList<AppPlace> doInBackground(QueryData... queryDatas) {
-        queryData =queryDatas[0];
+    protected ArrayList<AppPlace> doInBackground(QueryData... data) {
+        queryData =data[0];
 
-        this.mainActivity = queryData.getMainActivity();
-        ArrayList<AppPlace> places = getPlaces(queryData.getLocation(),queryData.getRadius(),queryData.getTypes());
+        this.appActivity= queryData.getAppActivity();
 
 
-        return places;
+        return getPlaces(queryData.getLocation(),queryData.getRadius(),queryData.getTypes());
     }
 
     @Override
     protected void onPostExecute(ArrayList<AppPlace> places) {
-        this.mainActivity.setPlaces(places);
-        this.mainActivity.createPlacesMarks(queryData.getLocation());
+        Bundle data = new Bundle();
+        data.putParcelableArrayList("Places", places);
+        data.putParcelable("Location", queryData.getLocation());
+        data.putStringArray("Types",queryData.getTypes());
+        this.appActivity.update(data);
     }
 
 

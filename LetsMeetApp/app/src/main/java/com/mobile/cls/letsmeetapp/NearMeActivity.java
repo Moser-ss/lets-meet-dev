@@ -2,6 +2,7 @@ package com.mobile.cls.letsmeetapp;
 
 import android.content.Context;
 import android.content.Intent;
+import android.location.Location;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,8 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.QuickContactBadge;
 import android.widget.TextView;
+
+import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -35,6 +38,7 @@ public class NearMeActivity extends AppCompatActivity {
     private ArrayList<AppPlace> placesNearMe;
     private String longitude;
     private String latitude;
+    protected String[] types = {"Bar","Restaurant","Cafe"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,8 +48,11 @@ public class NearMeActivity extends AppCompatActivity {
         Bundle extras = getIntent().getExtras();
         if(extras != null){
             placesNearMe = extras.getParcelableArrayList("Places");
-            longitude= extras.getString("Longitude");
-            latitude = extras.getString("Latitude");
+            LatLng location = extras.getParcelable("Location");
+            String[] bundleTypes = extras.getStringArray("Types");
+            if(bundleTypes != null){types=bundleTypes;}
+            longitude = Double.toString(location.longitude);
+            latitude = Double.toString(location.latitude);
         }
 
         new QueryLocation().execute(new String[] {latitude,longitude});
@@ -144,7 +151,18 @@ public class NearMeActivity extends AppCompatActivity {
         @Override
         protected void onPostExecute(String location) {
             TextView queryView = (TextView) findViewById(R.id.queryView);
-            queryView.setText("Cafe, Bar & Restaurants near "+location);
+            StringBuilder textBuilder = new StringBuilder();
+            for( int i =0; i<types.length;i++ ){
+                String type = types[i].substring(0,1).toUpperCase() + types[i].substring(1).toLowerCase();
+                textBuilder.append(type);
+                if(!(i==(types.length-1))){
+                    if(i==(types.length-2)){
+                        textBuilder.append(" & ");
+                    }else textBuilder.append(" , ");
+                }
+            }
+            textBuilder.append(" near "+location);
+            queryView.setText(textBuilder.toString());
         }
 
         private String getLocation(String jsonContents) {
@@ -196,4 +214,5 @@ public class NearMeActivity extends AppCompatActivity {
             return content.toString();
         }
     }
+
 }
