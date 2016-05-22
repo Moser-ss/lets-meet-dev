@@ -14,27 +14,30 @@
         android:layout_height="0dp"
         android:layout_weight="3"
         android:gravity="center_horizontal"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:weightSum="1"
+        android:background="#242424">
 
         <ImageView
             android:id="@+id/google_icon"
-            android:layout_width="48dp"
+            android:layout_width="146dp"
             android:layout_height="48dp"
             android:layout_marginBottom="10dp"
             android:layout_marginTop="@dimen/g_top_margin"
             android:contentDescription="@string/desc_google_icon"
-            android:src="@drawable/googleg_color"
-            android:layout_gravity="center_horizontal" />
+            android:src="@drawable/lets_meet_logo"
+            android:layout_gravity="center_horizontal"
+            android:layout_weight="0.19" />
 
-        <TextView
-            android:id="@+id/title_text"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="10dp"
-            android:text="@string/title_text"
-            android:gravity="center"
-            android:textColor="@android:color/white"
-            android:textSize="36sp" />
+        <!--<TextView-->
+            <!--android:id="@+id/title_text"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:layout_marginBottom="10dp"-->
+            <!--android:text="@string/title_text"-->
+            <!--android:gravity="center"-->
+            <!--android:textColor="@android:color/white"-->
+            <!--android:textSize="36sp" />-->
 
         <TextView
             android:id="@+id/status"
@@ -89,14 +92,16 @@
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:text="@string/sign_out"
-                android:theme="@style/ThemeOverlay.MyDarkButton" />
+                android:theme="@style/ThemeOverlay.MyDarkButton"
+                android:background="@color/colorAccent" />
 
             <Button
                 android:id="@+id/disconnect_button"
                 android:layout_width="162dp"
                 android:layout_height="wrap_content"
                 android:text="@string/disconnect"
-                android:theme="@style/ThemeOverlay.MyDarkButton" />
+                android:theme="@style/ThemeOverlay.MyDarkButton"
+                android:background="@color/colorAccent" />
         </LinearLayout>
 
     </RelativeLayout>
