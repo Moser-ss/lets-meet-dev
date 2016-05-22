@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    tools:context=".OptionsActivity">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:text="About"
+        android:textSize="35sp"
+        android:textAlignment="center"
+        android:id="@+id/favoritesPlaceView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true" />
+
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/favoritesPlaceView"
+        android:weightSum="1">
+
+     /
+
+        <!--<Button-->
+            <!--android:layout_margin="25dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Logout"-->
+            <!--android:id="@+id/logoutButton"-->
+            <!--android:layout_gravity="center_horizontal" />-->
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textSize="20sp"
+            android:textAlignment="center"
+            android:id="@+id/versionView"
+            android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Developed by:\nCatarina Rodrigues 70921\nLuís Prates 70923\nStephane Moser 28394"
+            android:id="@+id/developedByTextView"
+            android:layout_weight="0.42" />
+
+    </LinearLayout>
+
+</RelativeLayout>
