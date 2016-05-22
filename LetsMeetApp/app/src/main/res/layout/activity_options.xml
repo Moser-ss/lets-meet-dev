@@ -12,7 +12,7 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="75dp"
-        android:text="Options"
+        android:text="About"
         android:textSize="35sp"
         android:textAlignment="center"
         android:id="@+id/favoritesPlaceView"
@@ -24,36 +24,17 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/favoritesPlaceView"
-        android:layout_alignParentEnd="true">
+        android:weightSum="1">
 
-        <LinearLayout
-            android:orientation="horizontal"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+     /
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:text="Language"
-                android:gravity="center"
-                android:textSize="25sp"
-                android:id="@+id/languageView" />
-
-            <Spinner
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:id="@+id/languageSpinner"
-                android:layout_weight="1"
-                android:spinnerMode="dropdown" />
-        </LinearLayout>
-
-        <Button
-            android:layout_margin="25dp"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Logout"
-            android:id="@+id/logoutButton"
-            android:layout_gravity="center_horizontal" />
+        <!--<Button-->
+            <!--android:layout_margin="25dp"-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--android:text="Logout"-->
+            <!--android:id="@+id/logoutButton"-->
+            <!--android:layout_gravity="center_horizontal" />-->
 
         <TextView
             android:layout_width="match_parent"
@@ -62,6 +43,14 @@
             android:textAlignment="center"
             android:id="@+id/versionView"
             android:layout_gravity="center_horizontal" />
+
+        <TextView
+            android:layout_width="230dp"
+            android:layout_height="wrap_content"
+            android:text="Developed by:\nCatarina Rodrigues 70921\nLuís Prates 70923\nStephane Moser 28394"
+            android:id="@+id/developedByTextView"
+            android:layout_weight="0.42" />
+
     </LinearLayout>
 
 </RelativeLayout>
