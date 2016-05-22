@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mobile.cls.letsmeetapp.MenuActivity">
+    tools:context="com.mobile.cls.letsmeetapp.MenuActivity"
+    android:background="@color/colorPrimaryLight">
 
     <LinearLayout
         android:orientation="horizontal"
@@ -25,14 +26,16 @@
         <TextView
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:id="@+id/userInfo" />
+            android:id="@+id/userInfo"
+            android:background="@color/colorPrimaryLight" />
     </LinearLayout>
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_below="@+id/linearLayout2">
+        android:layout_below="@+id/linearLayout2"
+        android:background="@color/colorPrimaryLight">
 
         <Button
             android:layout_width="match_parent"
@@ -40,7 +43,9 @@
             android:text="Near Me"
             android:onClick="goNearMe"
             android:id="@+id/nearMeButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:background="@color/colorAccent" />
 
         <Button
             android:layout_width="match_parent"
@@ -48,7 +53,9 @@
             android:text="Find a Place"
             android:onClick="goFindAPlace"
             android:id="@+id/findAPlaceButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="#fefefe"
+            android:background="@color/colorAccent" />
 
         <Button
             android:layout_width="match_parent"
@@ -56,7 +63,9 @@
             android:text="My Events"
             android:onClick="goMyEvents"
             android:id="@+id/myEventsButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:background="@color/colorAccent" />
 
         <Button
             android:layout_width="match_parent"
@@ -64,7 +73,9 @@
             android:text="Favorite Places"
             android:onClick="goFavoritePlaces"
             android:id="@+id/favoritePlacesButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="#ffffff"
+            android:background="@color/colorAccent" />
 
         <Button
             android:layout_width="match_parent"
@@ -72,7 +83,9 @@
             android:text="About"
             android:onClick="goOptions"
             android:id="@+id/optionsButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:background="@color/colorAccent"
+            android:textColor="#ffffff" />
     </LinearLayout>
 
 </RelativeLayout>

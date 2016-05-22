@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".OptionsActivity">
+    tools:context=".OptionsActivity"
+    android:background="@color/colorPrimaryLight">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,14 +18,17 @@
         android:textAlignment="center"
         android:id="@+id/favoritesPlaceView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/primary_text"
+        android:background="@color/colorPrimaryLight" />
 
     <LinearLayout
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/favoritesPlaceView"
-        android:weightSum="1">
+        android:weightSum="1"
+        android:background="@color/colorPrimaryLight">
 
      /
 
@@ -49,7 +53,8 @@
             android:layout_height="wrap_content"
             android:text="Developed by:\nCatarina Rodrigues 70921\nLuís Prates 70923\nStephane Moser 28394"
             android:id="@+id/developedByTextView"
-            android:layout_weight="0.42" />
+            android:layout_weight="0.42"
+            android:textColor="@color/primary_text" />
 
     </LinearLayout>
 

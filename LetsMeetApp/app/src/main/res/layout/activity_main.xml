@@ -17,14 +17,17 @@
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="match_parent"
+            android:background="@color/colorPrimaryLight">
 
             <Button
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Menu"
                 android:onClick="goToMenu"
-                android:id="@+id/menuButton" />
+                android:id="@+id/menuButton"
+                android:background="@color/colorAccent"
+                android:textColor="@color/icons" />
 
             <fragment
                 android:id="@+id/place_autocomplete_fragment"
@@ -40,12 +43,13 @@
             android:weightSum="1">
 
             <Button
-                android:layout_width="0dp"
+                android:layout_width="152dp"
                 android:layout_height="wrap_content"
                 android:text="Favorites"
                 android:onClick="goFavoritePlaces"
                 android:id="@+id/favoritesButton"
-                android:layout_weight="1"/>
+                android:background="@color/colorAccent"
+                android:textColor="@color/icons" />
             <Button
                 style="?android:attr/buttonStyleSmall"
                 android:layout_width="wrap_content"
@@ -53,15 +57,18 @@
                 android:text="My Events"
                 android:onClick="goMyEvents"
                 android:id="@+id/eventsButton"
-                android:layout_weight="1" />
+                android:layout_weight="1"
+                android:background="@color/colorAccent"
+                android:textColor="@color/icons" />
 
             <Button
-                android:layout_width="wrap_content"
+                android:layout_width="113dp"
                 android:layout_height="wrap_content"
                 android:text="Near to Me"
                 android:id="@+id/nearToMeButton"
-                android:layout_weight="1"
-                android:onClick="goNearMe" />
+                android:onClick="goNearMe"
+                android:background="@color/colorAccent"
+                android:textColor="@color/icons" />
         </LinearLayout>
     </LinearLayout>
 

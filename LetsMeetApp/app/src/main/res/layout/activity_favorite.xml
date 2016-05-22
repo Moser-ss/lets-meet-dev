@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mobile.cls.letsmeetapp.FavoriteActivity">
+    tools:context="com.mobile.cls.letsmeetapp.FavoriteActivity"
+    android:background="@color/colorPrimaryLight">
 
     <TextView
         android:layout_width="match_parent"
@@ -17,12 +18,15 @@
         android:textAlignment="center"
         android:id="@+id/favoritesPlaceView"
         android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:textColor="@color/primary_text"
+        android:background="@color/colorPrimaryLight" />
 
     <ListView
         android:layout_width="match_parent"
         android:layout_height="fill_parent"
         android:id="@+id/resultFavoritesListView"
         android:layout_below="@+id/favoritesPlaceView"
-        android:layout_centerHorizontal="true" />
+        android:layout_centerHorizontal="true"
+        android:background="@color/colorPrimaryLight" />
 </RelativeLayout>

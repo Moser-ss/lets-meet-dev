@@ -7,7 +7,8 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context=".FindPlaceActivity">
+    tools:context=".FindPlaceActivity"
+    android:background="@color/colorPrimaryLight">
 
     <EditText
         android:layout_width="match_parent"
@@ -28,7 +29,8 @@
         android:gravity="center_horizontal"
         android:textSize="25sp"
         android:layout_below="@+id/placeToQueryText"
-        android:layout_alignParentEnd="true" />
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/primary_text" />
 
     <LinearLayout
         android:orientation="vertical"
@@ -44,7 +46,8 @@
             android:text="Restaurant"
             android:id="@+id/restaurantButton"
             android:onClick="uncheckedRestaurantButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/primary_text" />
 
         <RadioButton
             android:layout_margin="10dp"
@@ -53,7 +56,8 @@
             android:text="Bar"
             android:id="@+id/barButton"
             android:onClick="uncheckedBarButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/primary_text" />
 
         <RadioButton
             android:layout_margin="10dp"
@@ -62,7 +66,8 @@
             android:text="Cafe"
             android:id="@+id/cafeButton"
             android:onClick="uncheckedCafeButton"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/primary_text" />
 
         <Button
             android:layout_margin="10dp"
@@ -72,6 +77,8 @@
             android:text="Search"
             android:id="@+id/searchButton"
             android:onClick="queryPlace"
-            android:layout_gravity="center_horizontal" />
+            android:layout_gravity="center_horizontal"
+            android:textColor="@color/icons"
+            android:background="@color/colorAccent" />
     </LinearLayout>
 </RelativeLayout>
