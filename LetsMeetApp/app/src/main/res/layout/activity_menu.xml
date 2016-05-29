@@ -39,13 +39,16 @@
 
         <Button
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="wrap_content"
             android:text="Near Me"
             android:onClick="goNearMe"
             android:id="@+id/nearMeButton"
-            android:layout_gravity="center_horizontal"
             android:textColor="#ffffff"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorAccent"
+            android:singleLine="false"
+            android:lines="@integer/abc_max_action_buttons"
+            android:outlineProvider="paddedBounds"
+            android:layout_marginBottom="20dp" />
 
         <Button
             android:layout_width="match_parent"
@@ -53,9 +56,10 @@
             android:text="Find a Place"
             android:onClick="goFindAPlace"
             android:id="@+id/findAPlaceButton"
-            android:layout_gravity="center_horizontal"
             android:textColor="#fefefe"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorAccent"
+            android:padding="10dp"
+            android:layout_marginBottom="20dp" />
 
         <Button
             android:layout_width="match_parent"
@@ -65,7 +69,8 @@
             android:id="@+id/myEventsButton"
             android:layout_gravity="center_horizontal"
             android:textColor="#ffffff"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorAccent"
+            android:layout_marginBottom="20dp" />
 
         <Button
             android:layout_width="match_parent"
@@ -73,9 +78,10 @@
             android:text="Favorite Places"
             android:onClick="goFavoritePlaces"
             android:id="@+id/favoritePlacesButton"
-            android:layout_gravity="center_horizontal"
             android:textColor="#ffffff"
-            android:background="@color/colorAccent" />
+            android:background="@color/colorAccent"
+            android:outlineProvider="bounds"
+            android:layout_marginBottom="20dp" />
 
         <Button
             android:layout_width="match_parent"
@@ -83,7 +89,6 @@
             android:text="About"
             android:onClick="goOptions"
             android:id="@+id/optionsButton"
-            android:layout_gravity="center_horizontal"
             android:background="@color/colorAccent"
             android:textColor="#ffffff" />
     </LinearLayout>
