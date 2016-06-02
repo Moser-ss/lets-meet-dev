@@ -9,7 +9,7 @@ android {
         minSdkVersion 17
         targetSdkVersion 21
         versionCode 1
-        versionName "0.2.0"
+        versionName "0.5.0"
     }
     buildTypes {
         release {
@@ -27,8 +27,15 @@ dependencies {
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:design:23.0.0'
+    compile 'pub.devrel:easypermissions:0.1.5'
     compile 'com.google.android.gms:play-services-ads:8.4.0'
     compile 'com.google.android.gms:play-services-auth:8.4.0'
     compile 'com.google.android.gms:play-services-gcm:8.4.0'
+    compile('com.google.api-client:google-api-client-android:1.20.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
+    compile('com.google.apis:google-api-services-calendar:v3-rev125-1.20.0') {
+        exclude group: 'org.apache.httpcomponents'
+    }
 }
 apply plugin: 'com.google.gms.google-services'

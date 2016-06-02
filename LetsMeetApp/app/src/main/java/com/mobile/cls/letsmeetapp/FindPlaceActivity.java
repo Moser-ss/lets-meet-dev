@@ -110,7 +110,15 @@ public class FindPlaceActivity extends AppCompatActivity implements AppActivity 
         placesTypes = types.toArray(placesTypes);
 
         EditText placeToQuery = (EditText) findViewById(R.id.placeToQueryText);
+
         String location = placeToQuery.getText().toString().trim();
+        if(location.contains(" ")){
+            StringBuilder builder = new StringBuilder(location);
+            builder.insert(0,'"');
+            builder.append('"');
+            location = builder.toString();
+        }
+        
         Log.i("INFO","Query places with type "+types.toString()+" in location "+location);
         new QueryAddress().execute(location);
 

@@ -4,6 +4,8 @@
     <string name="title_activity_login">Sign in</string>
     <string name="title_activity_main">Lets Meet App</string>
     <integer name="PLACE_REQUEST">100</integer>
+    <integer name="CREATE_EVENT">101</integer>
+    <string name="event_summary">Let\'s Meet Event</string>
 
     <!-- Strings related to login -->
     <string name="prompt_email">Email</string>
@@ -62,4 +64,5 @@
     <!-- Server Client ID.  This should be a valid Web OAuth 2.0 Client ID obtained
          from https://console.developers.google.com/ -->
     <string name="server_client_id">YOUR_SERVER_CLIENT_ID</string>
+
 </resources>

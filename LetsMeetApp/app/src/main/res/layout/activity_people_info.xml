@@ -7,26 +7,30 @@
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
     android:paddingTop="@dimen/activity_vertical_margin"
-    tools:context="com.mobile.cls.letsmeetapp.MyEventsActivity"
-    android:background="@color/colorPrimaryLight">
-
+    tools:context="com.mobile.cls.letsmeetapp.PeopleInfoActivity">
     <TextView
         android:layout_width="match_parent"
         android:layout_height="30dp"
-        android:text="My Events"
+        android:id="@+id/peopleView"
         android:textSize="25sp"
         android:textAlignment="center"
-        android:id="@+id/myEventsView"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimaryLight"
+        android:text="Choice the People to Event"
         android:textColor="@color/primary_text" />
-
     <ListView
         android:layout_width="match_parent"
-        android:layout_height="fill_parent"
-        android:id="@+id/resultEventsListView"
-        android:layout_below="@+id/myEventsView"
-        android:layout_centerHorizontal="true"
-        android:background="@color/colorPrimaryLight" />
+        android:layout_height="wrap_content"
+        android:id="@+id/peopleListTextView"
+        android:layout_below="@+id/invitePeople"
+        android:layout_centerHorizontal="true" />
+
+    <Button
+        android:layout_below="@id/peopleView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Invite People"
+        android:onClick="invitePeople"
+        android:id="@+id/invitePeople" />
+
 </RelativeLayout>

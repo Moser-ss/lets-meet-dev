@@ -123,9 +123,11 @@ public class SignInActivity extends AppCompatActivity implements
         if (result.isSuccess()) {
             // Signed in successfully, show authenticated UI.
             GoogleSignInAccount acct = result.getSignInAccount();
+            String accountName = acct.getEmail();
             mStatusTextView.setText(getString(R.string.signed_in_fmt, acct.getDisplayName()));
             updateUI(true);
             Intent main = new Intent(getApplicationContext(),MainActivity.class);
+            main.putExtra("Account Name", accountName);
             startActivity(main);
         } else {
             // Signed out, show unauthenticated UI.

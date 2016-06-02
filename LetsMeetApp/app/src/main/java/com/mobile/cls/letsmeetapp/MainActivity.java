@@ -31,12 +31,14 @@ import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.HashMap;
 
 public class MainActivity extends FragmentActivity implements OnMapReadyCallback, GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener , LocationListener, AppActivity{
 
@@ -52,7 +54,10 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     private double RADIUS = 1000;
     private ArrayList<AppPlace> placesToMark;
     public  int PLACE_REQUEST;
+    public int CREATE_EVENT;
     private Location lastKnowLocation;
+    private HashMap<Marker,String> markerMap;
+    private String accountName;
 
 
     public void goToMenu (View view){
@@ -63,6 +68,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         LatLng locationLatLng = new LatLng(location.getLatitude(),location.getLongitude());
         data.putParcelable("Location",locationLatLng);
         data.putParcelableArrayList("Places",placesToMark);
+        data.putString("Account Name",accountName);
         goToMenu.putExtras(data);
         startActivityForResult(goToMenu,PLACE_REQUEST);
     }
@@ -86,13 +92,16 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
     }
     public void goMyEvents(View view){
         Intent goToMyEvents = new Intent( getApplicationContext(), MyEventsActivity.class);
+        goToMyEvents.putExtra("Account Name",accountName);
         startActivity(goToMyEvents);
     }
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        accountName = getIntent().getStringExtra("Account Name");
         PLACE_REQUEST=this.getResources().getInteger(R.integer.PLACE_REQUEST);
+        CREATE_EVENT=this.getResources().getInteger(R.integer.CREATE_EVENT);
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
@@ -108,7 +117,7 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         }
 
         createAutoComplete();
-
+        markerMap = new HashMap<>();
         lastLatLng = new LatLng(0,0);
         placesToMark = new ArrayList<>();
     }
@@ -131,7 +140,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
                 // TODO: Get info about the selected place.
                 Log.i("INFO", "Place: " + place.getName());
                 status=STATUS.FIND_PLACE;
-                markPlace(place);
+                AppPlace appPlace = new AppPlace(place);
+                markPlace(appPlace);
             }
 
             @Override
@@ -142,24 +152,29 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void markPlace(Place place) {
+    private void markPlace(AppPlace place) {
         mMap.clear();
 
         createUserMark(lastKnowLocation);
 
-        MarkerOptions marker = new MarkerOptions().title(place.getName().toString())
-                                    .position(place.getLatLng());
-        mMap.addMarker(marker);
 
-        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getLatLng(),15));
+        MarkerOptions marker = new MarkerOptions().title(place.getName().toString())
+                                    .position(place.getCoordinates());
+
+        Marker m = mMap.addMarker(marker);
+        markerMap.put(m,place.getPlaceId());
+
+        mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(place.getCoordinates(),15));
     }
 
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
-
+        Log.d("DEBUG", "Google Map Ready");
         Location lastLocation = LocationServices.FusedLocationApi.getLastLocation(
                 googleApiClient);
+        mMap.setOnMarkerClickListener(new MarkerClick());
+
         if (lastLocation != null) {
             updateGUI(lastLocation);}
             
@@ -207,7 +222,9 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
         for (AppPlace place :placesToMark){
             MarkerOptions marker = new MarkerOptions().position(place.getCoordinates())
                     .title(place.getName());
-            mMap.addMarker(marker);
+
+            Marker m = mMap.addMarker(marker);
+            markerMap.put(m,place.getPlaceId());
         }
 
     }
@@ -312,33 +329,8 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
             Bundle res = data.getExtras();
             AppPlace appPlace = res.getParcelable("Place");
             Log.d("DEBUG","Place obtain is "+appPlace.getName());
+            markPlace(appPlace);
 
-            PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(googleApiClient,appPlace.getPlaceId());
-            placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
-                @Override
-                public void onResult(@NonNull PlaceBuffer places) {
-                    if (!places.getStatus().isSuccess()) {
-                        Log.e("ERROR","Place not found");
-                        // Request did not complete successfully
-                        places.release();
-                        return;
-                    }
-                    Place place;
-                    try {
-                        place = places.get(0);
-                        Log.i("INFO","Place get successfully - Place "+place.getName());
-
-                    } catch (IllegalStateException e) {
-                        places.release();
-                        return;
-                    }
-
-
-                    markPlace(place);
-
-                    places.release();
-                }
-            });
         }
     }
 
@@ -362,10 +354,68 @@ public class MainActivity extends FragmentActivity implements OnMapReadyCallback
 
     @Override
     public void update(Bundle data) {
-        this.placesToMark =data.getParcelableArrayList("Places");
+        this.placesToMark = data.getParcelableArrayList("Places");
         Location location = LocationServices.FusedLocationApi.getLastLocation(googleApiClient);
         sortPlacesByDistance();
 
-        createPlacesMarks(location);
+        if(location != null)createPlacesMarks(location);
     }
+
+
+
+    private class MarkerClick implements GoogleMap.OnMarkerClickListener{
+        Bundle data;
+        @Override
+        public boolean onMarkerClick(Marker marker) {
+            boolean customListenerUsed = false;
+            String placeID = markerMap.get(marker);
+                PendingResult<PlaceBuffer> placeResult = Places.GeoDataApi.getPlaceById(googleApiClient,placeID);
+                placeResult.setResultCallback(new ResultCallback<PlaceBuffer>() {
+                    @Override
+                    public void onResult(@NonNull PlaceBuffer places) {
+                        if (!places.getStatus().isSuccess()) {
+                            Log.e("ERROR","Place not found");
+                            // Request did not complete successfully
+                            places.release();
+                            return;
+                        }
+                        Place place;
+                        try {
+                            place = places.get(0);
+                            Log.i("INFO","Place get successfully - Place "+place.getName());
+
+                        } catch (IllegalStateException e) {
+                            places.release();
+                            return;
+                        }
+                        createData(place);
+                        places.release();
+                    }
+                });
+
+            if( data !=null) {
+
+                Intent placeShow = new Intent(getApplicationContext(), PlaceInfoActivity.class);
+                placeShow.putExtras(data);
+                startActivity(placeShow);
+                customListenerUsed = true;
+            }
+
+            return customListenerUsed;
+        }
+
+        public void createData(Place place) {
+            data = new Bundle();
+            data.putString("Account Name", accountName);
+            data.putString("Place Name", place.getName().toString());
+            data.putString("Place Address", place.getAddress().toString());
+            if(place.getPhoneNumber()!= null) {
+                data.putString("Place Phone Number", place.getPhoneNumber().toString());
+            }
+            if(place.getWebsiteUri() != null) {
+                data.putString("Place WebSite", place.getWebsiteUri().toString());
+            }
+        }
+    }
+
 }

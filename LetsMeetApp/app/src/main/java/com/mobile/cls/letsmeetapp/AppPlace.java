@@ -1,24 +1,61 @@
 package com.mobile.cls.letsmeetapp;
 
+import android.net.Uri;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.android.gms.location.places.Place;
+import com.google.android.gms.location.places.Places;
 import com.google.android.gms.maps.model.LatLng;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.List;
+
 /**
  * Created by User on 06/05/2016.
  */
 public class AppPlace implements Parcelable {
+    private Uri webSite;
+    private  String phoneNumber;
     private  String name;
     private  String placeId;
     private  String address;
     private String type;
     private  LatLng coordinates;
     private float distance;
+
+    public AppPlace(Place place) {
+        this.name= place.getName().toString();
+        this.placeId = place.getId();
+        this.address = place.getAddress().toString();
+        this.type = getTypeFromPlace(place.getPlaceTypes());
+        this.coordinates = place.getLatLng();
+        this.phoneNumber = place.getPhoneNumber().toString();
+        this.webSite= place.getWebsiteUri();
+    }
+
+    private String getTypeFromPlace(List<Integer> placeTypes) {
+        String type = "other";
+        int placeType = placeTypes.get(0);
+       switch (placeType){
+           case Place.TYPE_BAR: {
+               type = "bar";
+               break;
+           }
+           case Place.TYPE_RESTAURANT: {
+               type = "restaurant";
+               break;
+           }
+           case Place.TYPE_CAFE: {
+               type = "cafe";
+               break;
+           }
+       }
+        return type;
+    }
 
     public String getName() {
         return name;

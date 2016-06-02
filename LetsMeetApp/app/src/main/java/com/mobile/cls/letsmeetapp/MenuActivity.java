@@ -28,6 +28,7 @@ public class MenuActivity extends AppCompatActivity {
     }
     public void goMyEvents(View view){
         Intent goToMyEvents = new Intent( getApplicationContext(), MyEventsActivity.class);
+        goToMyEvents.putExtra("Account Name",data.getString("Account Name"));
         startActivity(goToMyEvents);
     }
     public void goFavoritePlaces(View view){
