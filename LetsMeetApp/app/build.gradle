@@ -10,6 +10,12 @@ android {
         targetSdkVersion 21
         versionCode 1
         versionName "0.5.0"
+
+        // Enabling multidex support.
+        multiDexEnabled true
+    }
+    dexOptions {
+        javaMaxHeapSize "4g"
     }
     buildTypes {
         release {
@@ -23,7 +29,7 @@ dependencies {
     compile fileTree(include: ['*.jar'], dir: 'libs')
     testCompile 'junit:junit:4.12'
 
-
+    compile 'com.android.support:multidex:1.0.0'
     compile 'com.android.support:appcompat-v7:23.0.0'
     compile 'com.google.android.gms:play-services:8.4.0'
     compile 'com.android.support:design:23.0.0'
