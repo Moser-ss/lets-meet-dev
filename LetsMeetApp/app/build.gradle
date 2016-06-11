@@ -14,9 +14,7 @@ android {
         // Enabling multidex support.
         multiDexEnabled true
     }
-    dexOptions {
-        javaMaxHeapSize "4g"
-    }
+
     buildTypes {
         release {
             minifyEnabled false
